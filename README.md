@@ -14,10 +14,10 @@
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
   </a>
   <a href="https://kotlinlang.org/">
-    <img src="https://img.shields.io/badge/Kotlin-1.9.21-blue.svg?logo=kotlin" alt="Kotlin">
+    <img src="https://img.shields.io/badge/Kotlin-2.2.0--RC3-blue.svg?logo=kotlin" alt="Kotlin">
   </a>
   <a href="https://spring.io/projects/spring-boot/">
-    <img src="https://img.shields.io/badge/Spring_Boot-3.2.0-green.svg?logo=spring" alt="Spring Boot">
+    <img src="https://img.shields.io/badge/Spring_Boot-3.5.0-green.svg?logo=spring" alt="Spring Boot">
   </a>
   <a href="https://www.mongodb.com/">
     <img src="https://img.shields.io/badge/MongoDB-4.4-green.svg?logo=mongodb" alt="MongoDB">
@@ -27,6 +27,9 @@
   </a>
   <a href="https://www.docker.com/">
     <img src="https://img.shields.io/badge/Docker-24.0.5-blue.svg?logo=docker" alt="Docker">
+  </a>
+  <a href="https://x.com/carrilloapps">
+    <img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow me">
   </a>
 </p>
 
