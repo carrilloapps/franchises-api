@@ -137,7 +137,7 @@ Before you get started, ensure you have the following installed on your system:
     ```bash
     ./gradlew bootRun
     ```
-    The application will be accessible at `http://localhost:8080`. 🌐
+    The application will be accessible at `http://localhost:3081`. 🌐
 
 ### Running with Docker
 
@@ -151,7 +151,7 @@ Before you get started, ensure you have the following installed on your system:
     ```bash
     docker compose up
     ```
-    This command will launch both the MongoDB container and the Spring Boot application, making the application available at `http://localhost:8080`. 🐳
+    This command will launch both the MongoDB container and the Spring Boot application, making the application available at `http://localhost:3081`. 🐳
 
 ## 💾 Database Configuration
 
@@ -180,7 +180,7 @@ All API endpoints are conveniently prefixed with `/franchises`. 🔗
 
 Once the application is up and running, you can explore and interact with the API via Swagger UI:
 
-`http://localhost:8080/swagger-ui.html`
+`http://localhost:3081/swagger-ui.html`
 
 This interactive documentation allows you to test all API endpoints directly from your browser. 🧪
 
@@ -320,16 +320,16 @@ To run the application directly from the Docker image published to GitHub Contai
     docker pull ghcr.io/carrilloapps/franchises-api:1.0.0
     ```
 
-3.  **Run the Docker container**: You can run the image, mapping the application's port (8080) to a port on your host machine. Also, ensure your MongoDB instance is accessible from the container.
+3.  **Run the Docker container**: You can run the image, mapping the application's port (3081) to a port on your host machine. Also, ensure your MongoDB instance is accessible from the container.
     ```bash
-    docker run -p 8080:8080 ghcr.io/YOUR_REPOSITORY/YOUR_IMAGE_NAME:TAG
+    docker run -p 3081:3081 ghcr.io/YOUR_REPOSITORY/YOUR_IMAGE_NAME:TAG
     ```
     If your MongoDB is running on `localhost` and you are running Docker on Linux, you might need to use `host.docker.internal` or the host's IP address for the MongoDB connection string within the container, or link a MongoDB container.
 
     Example with MongoDB running in a separate container (using `compose.yaml` is recommended for this):
     ```bash
-    docker run -p 8080:8080 --network host ghcr.io/carrilloapps/franchises-api:1.0.0
+    docker run -p 3081:3081 --network host ghcr.io/carrilloapps/franchises-api:1.0.0
     ```
     (Note: `--network host` might not be available on all Docker environments, especially Docker Desktop on macOS/Windows, where `host.docker.internal` is preferred for host access.)
 
-4.  **Access the application**: Once the container is running, the application will be accessible at `http://localhost:8080`.
+4.  **Access the application**: Once the container is running, the application will be accessible at `http://localhost:3081`.

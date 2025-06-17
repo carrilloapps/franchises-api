@@ -14,6 +14,6 @@ USER spring
 # Set JAVA_OPTS for memory management
 ENV JAVA_OPTS="-Xmx256m -Xms256m"
 
-EXPOSE 8080
+EXPOSE 3081
 
 ENTRYPOINT sh -c "java ${JAVA_OPTS} -jar /app/app.jar"
