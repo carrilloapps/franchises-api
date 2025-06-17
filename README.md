@@ -1,6 +1,34 @@
 # 🚀 Franquicias API
 
-## 🌟 Project Overview
+<p>
+  <a href="https://github.com/carrilloapps/franchises-api/releases/latest">
+    <img src="https://img.shields.io/github/v/release/carrilloapps/franchises-api?style=flat-square" alt="Latest Release">
+  </a>
+  <a href="https://github.com/carrilloapps/franchises-api/pkgs/container/franchises-api">
+    <img src="https://img.shields.io/badge/Docker%20Image-ghcr.io%2Fcarrilloapps%2Ffranchises--api-blue?style=flat-square&logo=docker" alt="Docker Image">
+  </a>
+  <a href="https://github.com/carrilloapps/franchises-api/actions/workflows/docker-image.yml">
+    <img src="https://github.com/carrilloapps/franchises-api/actions/workflows/docker-image.yml/badge.svg" alt="Build and Push Docker Image">
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
+  </a>
+  <a href="https://kotlinlang.org/">
+    <img src="https://img.shields.io/badge/Kotlin-1.9.21-blue.svg?logo=kotlin" alt="Kotlin">
+  </a>
+  <a href="https://spring.io/projects/spring-boot/">
+    <img src="https://img.shields.io/badge/Spring_Boot-3.2.0-green.svg?logo=spring" alt="Spring Boot">
+  </a>
+  <a href="https://www.mongodb.com/">
+    <img src="https://img.shields.io/badge/MongoDB-4.4-green.svg?logo=mongodb" alt="MongoDB">
+  </a>
+  <a href="https://gradle.org/">
+    <img src="https://img.shields.io/badge/Gradle-8.5-blue.svg?logo=gradle" alt="Gradle">
+  </a>
+  <a href="https://www.docker.com/">
+    <img src="https://img.shields.io/badge/Docker-24.0.5-blue.svg?logo=docker" alt="Docker">
+  </a>
+</p>
 
 This project delivers a robust and scalable RESTful API designed for comprehensive management of franchises, branches, and products. Developed with **Spring Boot** and **Kotlin**, it utilizes **MongoDB** for efficient and flexible data persistence. This API is ideal for businesses looking to streamline their franchise operations, offering functionalities for adding new franchises, managing branches, handling product inventory, and providing insightful data on stock levels. 🌿
 
@@ -45,7 +73,7 @@ franchises/
 
 ## 📚 Table of Contents
 
-- [🌟 Project Overview](#-project-overview)
+- [🌟 Project Overview](#-franquicias-api)
 - [🛠️ Technologies Used](#️-technologies-used)
 - [📂 Project Structure](#-project-structure)
 - [✨ Features](#features)
@@ -269,10 +297,7 @@ This project leverages GitHub Actions to automate the Docker image build and pub
 
 ### Workflow Details
 
-*   **Trigger**: Automatically runs on `push` events to `main` or `master` branches, and on new tags matching `v*.*.*`. ➡️
+*   **Trigger**: Automatically runs on new tags matching `v*.*.*`. ➡️
 *   **Build Tool**: Uses Gradle to build the Docker image via `./gradlew bootBuildImage`. 🏗️
-*   **Registry**: Pushes the built image to `ghcr.io/${{ github.repository }}`. Tags include the Git tag (e.g., `v1.0.0` becomes `1.0.0`) or `latest` for `main` and `master` branches. 🏷️
+*   **Registry**: Pushes the built image to `ghcr.io/${{ github.repository }}`. Tags include the Git tag (e.g., `v1.0.0` becomes `1.0.0`). 🏷️
 *   **Authentication**: Authenticates securely using `GITHUB_TOKEN` for access to the GitHub Container Registry. 🔑
-
-To monitor workflow runs and their status, navigate to the "Actions" tab in your GitHub repository. 📊
-```
