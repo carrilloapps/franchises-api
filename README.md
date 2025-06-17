@@ -124,7 +124,7 @@ Before you get started, ensure you have the following installed on your system:
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/carrilloapps/franchises.git # Replace with actual repository URL
+    git clone https://github.com/carrilloapps/franchises-api.git # Replace with actual repository URL
     cd franchises
     ```
 

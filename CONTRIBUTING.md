@@ -19,7 +19,7 @@ Ready to dive into the code? Follow these steps:
 1.  **Fork the repository**: Start by forking the `franchises` repository to your GitHub account. 🍴
 2.  **Clone your fork**: Clone your forked repository to your local machine.
     ```bash
-    git clone https://github.com/carrilloapps/franchises.git
+    git clone https://github.com/carrilloapps/franchises-api.git
     ```
 3.  **Create a new branch**: Create a new branch for your feature or bug fix. Use descriptive names! 🌿
     ```bash
