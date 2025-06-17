@@ -33,7 +33,7 @@
   </a>
 </p>
 
-This project delivers a robust and scalable RESTful API designed for comprehensive management of franchises, branches, and products. Developed with **Spring Boot** and **Kotlin**, it utilizes **MongoDB** for efficient and flexible data persistence. This API is ideal for businesses looking to streamline their franchise operations, offering functionalities for adding new franchises, managing branches, handling product inventory, and providing insightful data on stock levels. 🌿
+This project delivers a robust and scalable RESTful API designed for comprehensive management of franchises, branches, and products. Developed with **Spring Boot** and **Kotlin**, it utilizes **MongoDB** for efficient and flexible data persistence. This API is ideal for businesses looking to streamline their franchise operations, offering functionalities for adding new franchises, managing branches, handling product inventory, and providing insightful data on stock levels.
 
 ## 🛠️ Technologies Used
 
