@@ -2,6 +2,8 @@
 
 ## v1.0.0 - 2024-07-30
 
+The `v1.0.0` version of the "Franchises API" project includes the following features and improvements:
+
 ### ✨ Features
 
 - Implemented RESTful API for managing franchises, branches, and products.
