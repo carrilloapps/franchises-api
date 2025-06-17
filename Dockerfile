@@ -1,9 +1,19 @@
-FROM openjdk:17-jdk-slim
-
+FROM gradle:8.5-jdk17-alpine AS build
 WORKDIR /app
+COPY --chown=gradle:gradle . /app
+RUN gradle bootJar --no-daemon
 
-COPY build/libs/*.jar app.jar
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/build/libs/*.jar app.jar
+
+# Create a non-root user
+RUN addgroup --system spring && adduser --system --ingroup spring spring
+USER spring
+
+# Set JAVA_OPTS for memory management
+ENV JAVA_OPTS="-Xmx256m -Xms256m"
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "${JAVA_OPTS}", "-jar", "app.jar"]

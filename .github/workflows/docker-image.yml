@@ -50,3 +50,15 @@ jobs:
         tags: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
         provenance: true
         sbom: true
+        labels: |
+          org.opencontainers.image.created=${{ github.event.release.published_at }}
+          org.opencontainers.image.authors=${{ github.actor }}
+          org.opencontainers.image.url=https://github.com/${{ github.repository }}
+          org.opencontainers.image.documentation=https://github.com/${{ github.repository }}#readme
+          org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          org.opencontainers.image.version=${{ github.sha }}
+          org.opencontainers.image.revision=${{ github.sha }}
+          org.opencontainers.image.vendor=carrilloapps
+          org.opencontainers.image.licenses=MIT
+          org.opencontainers.image.title=Franchises API
+          org.opencontainers.image.description=A robust and scalable RESTful API for comprehensive management of franchises, branches, and products.

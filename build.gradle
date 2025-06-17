@@ -1,4 +1,14 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:3.5.0"
+    }
+}
+
 plugins {
+	id 'java'
 	id 'org.jetbrains.kotlin.jvm' version '2.2.0-RC3'
 	id 'org.jetbrains.kotlin.plugin.spring' version '2.2.0-RC3'
 	id 'org.springframework.boot' version '3.5.0'
