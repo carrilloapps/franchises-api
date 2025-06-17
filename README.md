@@ -300,7 +300,36 @@ This project leverages GitHub Actions to automate the Docker image build and pub
 
 ### Workflow Details
 
-*   **Trigger**: Automatically runs on new tags matching `v*.*.*`. ➡️
-*   **Build Tool**: Uses Gradle to build the Docker image via `./gradlew bootBuildImage`. 🏗️
-*   **Registry**: Pushes the built image to `ghcr.io/${{ github.repository }}`. Tags include the Git tag (e.g., `v1.0.0` becomes `1.0.0`). 🏷️
+*   **Trigger**: Automatically runs on new releases (`published` event). ➡️
+*   **Build Tool**: Uses `docker/build-push-action` with Buildx for robust image building, including SBOM and provenance attestations. 🏗️
+*   **Registry**: Pushes the built image to `ghcr.io/${{ github.repository }}`. Tags include the release version (e.g., `v1.0.0` becomes `1.0.0`). 🏷️
 *   **Authentication**: Authenticates securely using `GITHUB_TOKEN` for access to the GitHub Container Registry. 🔑
+
+### Running from GitHub Container Registry Image
+
+To run the application directly from the Docker image published to GitHub Container Registry, follow these steps:
+
+1.  **Ensure Docker is installed**: Make sure you have Docker installed on your system. If not, you can download it from the [official Docker website](https://www.docker.com/products/docker-desktop).
+
+2.  **Pull the Docker image**: Replace `YOUR_REPOSITORY` with your GitHub username or organization and `YOUR_IMAGE_NAME` with the repository name (e.g., `franchises-api`). Replace `TAG` with the desired release version (e.g., `1.0.0`).
+    ```bash
+    docker pull ghcr.io/YOUR_REPOSITORY/YOUR_IMAGE_NAME:TAG
+    ```
+    For example, to pull the `v1.0.0` image of this project:
+    ```bash
+    docker pull ghcr.io/carrilloapps/franchises-api:1.0.0
+    ```
+
+3.  **Run the Docker container**: You can run the image, mapping the application's port (8080) to a port on your host machine. Also, ensure your MongoDB instance is accessible from the container.
+    ```bash
+    docker run -p 8080:8080 ghcr.io/YOUR_REPOSITORY/YOUR_IMAGE_NAME:TAG
+    ```
+    If your MongoDB is running on `localhost` and you are running Docker on Linux, you might need to use `host.docker.internal` or the host's IP address for the MongoDB connection string within the container, or link a MongoDB container.
+
+    Example with MongoDB running in a separate container (using `compose.yaml` is recommended for this):
+    ```bash
+    docker run -p 8080:8080 --network host ghcr.io/carrilloapps/franchises-api:1.0.0
+    ```
+    (Note: `--network host` might not be available on all Docker environments, especially Docker Desktop on macOS/Windows, where `host.docker.internal` is preferred for host access.)
+
+4.  **Access the application**: Once the container is running, the application will be accessible at `http://localhost:8080`.
