@@ -5,6 +5,13 @@ import app.carrillo.franchises.domain.Branch
 import app.carrillo.franchises.domain.Franchise
 import app.carrillo.franchises.domain.Product
 
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -20,6 +27,7 @@ import org.slf4j.LoggerFactory
  */
 @RestController
 @RequestMapping("/franchises")
+@Tag(name = "Franchise Management", description = "API for managing franchises, branches, and products")
 class FranchiseController(private val franchiseService: FranchiseService) {
 
     private val logger = LoggerFactory.getLogger(FranchiseController::class.java)
@@ -30,9 +38,22 @@ class FranchiseController(private val franchiseService: FranchiseService) {
      * @param franchise The [Franchise] object to be added.
      * @return A [Mono] emitting the saved [Franchise] with HTTP status 201 (Created).
      */
+    @Operation(
+        summary = "Create a new franchise",
+        description = "Creates a new franchise with the provided information. The franchise can include initial branches and products."
+    )
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "201", description = "Franchise created successfully",
+            content = [Content(mediaType = "application/json", schema = Schema(implementation = Franchise::class))]),
+        ApiResponse(responseCode = "400", description = "Invalid franchise data provided"),
+        ApiResponse(responseCode = "500", description = "Internal server error")
+    ])
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun addFranchise(@RequestBody franchise: Franchise): Mono<Franchise> {
+    fun addFranchise(
+        @Parameter(description = "Franchise object to be created", required = true)
+        @RequestBody franchise: Franchise
+    ): Mono<Franchise> {
         logger.info("Received request to add new franchise: {}", franchise.name)
         return franchiseService.addFranchise(franchise)
             .doOnSuccess { savedFranchise ->
@@ -48,6 +69,15 @@ class FranchiseController(private val franchiseService: FranchiseService) {
      *
      * @return A [Flux] emitting all [Franchise] objects.
      */
+    @Operation(
+        summary = "Get all franchises",
+        description = "Retrieves a list of all franchises in the system with their branches and products."
+    )
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "List of franchises retrieved successfully",
+            content = [Content(mediaType = "application/json", schema = Schema(implementation = Franchise::class))]),
+        ApiResponse(responseCode = "500", description = "Internal server error")
+    ])
     @GetMapping
     fun getAllFranchises(): Flux<Franchise> {
         logger.info("Received request to get all franchises.")
@@ -64,8 +94,21 @@ class FranchiseController(private val franchiseService: FranchiseService) {
      * @param id The ID of the franchise to retrieve.
      * @return A [Mono] emitting the [Franchise] object if found, or [Mono.empty] if not found.
      */
+    @Operation(
+        summary = "Get franchise by ID",
+        description = "Retrieves a specific franchise by its unique identifier, including all its branches and products."
+    )
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Franchise found and retrieved successfully",
+            content = [Content(mediaType = "application/json", schema = Schema(implementation = Franchise::class))]),
+        ApiResponse(responseCode = "404", description = "Franchise not found"),
+        ApiResponse(responseCode = "500", description = "Internal server error")
+    ])
     @GetMapping("/{id}")
-    fun getFranchiseById(@PathVariable id: String): Mono<ResponseEntity<Franchise>> {
+    fun getFranchiseById(
+        @Parameter(description = "Unique identifier of the franchise", required = true, example = "507f1f77bcf86cd799439011")
+        @PathVariable id: String
+    ): Mono<ResponseEntity<Franchise>> {
         logger.info("Received request to get franchise by ID: {}", id)
         return franchiseService.getFranchiseById(id)
             .map { franchise ->
@@ -85,8 +128,24 @@ class FranchiseController(private val franchiseService: FranchiseService) {
      * @param branch The [Branch] object to be added.
      * @return A [Mono] emitting the updated [Franchise] with HTTP status 200 (OK) if found, or 404 (Not Found) if the franchise is not found.
      */
+    @Operation(
+        summary = "Add branch to franchise",
+        description = "Adds a new branch to an existing franchise. The branch can include initial products."
+    )
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Branch added successfully to franchise",
+            content = [Content(mediaType = "application/json", schema = Schema(implementation = Franchise::class))]),
+        ApiResponse(responseCode = "404", description = "Franchise not found"),
+        ApiResponse(responseCode = "400", description = "Invalid branch data provided"),
+        ApiResponse(responseCode = "500", description = "Internal server error")
+    ])
     @PostMapping("/{franchiseId}/branches")
-    fun addBranchToFranchise(@PathVariable franchiseId: String, @RequestBody branch: Branch): Mono<ResponseEntity<Franchise>> {
+    fun addBranchToFranchise(
+        @Parameter(description = "Unique identifier of the franchise", required = true, example = "507f1f77bcf86cd799439011")
+        @PathVariable franchiseId: String,
+        @Parameter(description = "Branch object to be added to the franchise", required = true)
+        @RequestBody branch: Branch
+    ): Mono<ResponseEntity<Franchise>> {
         logger.info("Received request to add branch {} to franchise with ID: {}", branch.name, franchiseId)
         return franchiseService.addBranchToFranchise(franchiseId, branch)
             .map { franchise ->
@@ -172,8 +231,20 @@ class FranchiseController(private val franchiseService: FranchiseService) {
      * @param franchiseId The ID of the franchise.
      * @return A [Flux] emitting a map where the key is the branch name and the value is the product with the most stock.
      */
+    @Operation(
+        summary = "Get product with most stock per branch",
+        description = "Retrieves the product with the highest stock quantity for each branch within a specific franchise. This is useful for inventory analysis and stock management."
+    )
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Products with most stock per branch retrieved successfully"),
+        ApiResponse(responseCode = "404", description = "Franchise not found or has no branches"),
+        ApiResponse(responseCode = "500", description = "Internal server error")
+    ])
     @GetMapping("/{franchiseId}/products/most-stock-per-branch")
-    fun getProductWithMostStockPerBranch(@PathVariable franchiseId: String): Flux<Map<String, Product>> {
+    fun getProductWithMostStockPerBranch(
+        @Parameter(description = "Unique identifier of the franchise", required = true, example = "507f1f77bcf86cd799439011")
+        @PathVariable franchiseId: String
+    ): Flux<Map<String, Product>> {
         logger.info("Received request to get product with most stock per branch for franchise with ID: {}", franchiseId)
         return franchiseService.getProductWithMostStockPerBranch(franchiseId)
             .doOnComplete { logger.info("Successfully retrieved product with most stock per branch for franchise with ID: {}", franchiseId) }
