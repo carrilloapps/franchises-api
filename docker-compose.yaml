@@ -1,0 +1,36 @@
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: mongo
+    ports:
+      - "3082:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      franchises-network:
+        aliases:
+          - mongo
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: franchises-app
+    ports:
+      - "3081:3081"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/franchisesdb
+      SPRING_DATA_MONGODB_CONNECTION_TIMEOUT: 20000
+      SPRING_DATA_MONGODB_SOCKET_TIMEOUT: 0
+    depends_on:
+      - mongo
+    networks:
+      - franchises-network
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+
+networks:
+  franchises-network:
+    driver: bridge
