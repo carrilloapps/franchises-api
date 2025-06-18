@@ -317,4 +317,25 @@ class FranchiseServiceTest {
             .expectNext(updatedFranchise)
             .verifyComplete()
     }
+
+    @Test
+    @DisplayName("Should get product with most stock per branch successfully")
+    fun `should get product with most stock per branch successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val product1 = Product(name = "Product 1", stock = 5, price = 100.0)
+        val product2 = Product(name = "Product 2", stock = 15, price = 200.0)
+        val product3 = Product(name = "Product 3", stock = 8, price = 150.0)
+        val branch1 = Branch(name = "Branch 1", products = mutableListOf(product1, product2))
+        val branch2 = Branch(name = "Branch 2", products = mutableListOf(product3))
+        val franchise = Franchise(id = franchiseId, name = "Test Franchise", branches = mutableListOf(branch1, branch2))
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(franchise))
+
+        // When & Then
+        StepVerifier.create(franchiseService.getProductWithMostStockPerBranch(franchiseId))
+            .expectNext(mapOf("Branch 1" to product2))
+            .expectNext(mapOf("Branch 2" to product3))
+            .verifyComplete()
+    }
 }
