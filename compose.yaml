@@ -23,8 +23,7 @@ services:
       SPRING_DATA_MONGODB_CONNECTION_TIMEOUT: 20000
       SPRING_DATA_MONGODB_SOCKET_TIMEOUT: 0
     depends_on:
-      mongo:
-        condition: service_healthy
+      - mongo
     networks:
       - franchises-network
     restart: unless-stopped
