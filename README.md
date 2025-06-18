@@ -26,7 +26,7 @@
     <img src="https://img.shields.io/badge/Spring_Boot-3.5.0-green.svg?logo=spring" alt="Spring Boot">
   </a>
   <a href="https://www.mongodb.com/">
-    <img src="https://img.shields.io/badge/MongoDB-4.4-green.svg?logo=mongodb" alt="MongoDB">
+    <img src="https://img.shields.io/badge/MongoDB-7.0-green.svg?logo=mongodb" alt="MongoDB">
   </a>
   <a href="https://gradle.org/">
     <img src="https://img.shields.io/badge/Gradle-8.5-blue.svg?logo=gradle" alt="Gradle">
