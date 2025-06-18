@@ -10,12 +10,6 @@
   <a href="https://github.com/carrilloapps/franchises-api/pkgs/container/franchises-api">
     <img src="https://img.shields.io/badge/Docker%20Image-ghcr.io%2Fcarrilloapps%2Ffranchises--api-blue?style=flat-square&logo=docker" alt="Docker Image">
   </a>
-  <a href="https://github.com/carrilloapps/franchises-api/actions/workflows/docker-image.yml">
-    <img src="https://github.com/carrilloapps/franchises-api/actions/workflows/docker-image.yml/badge.svg" alt="🐳 Docker Build">
-  </a>
-  <a href="https://codecov.io/gh/carrilloapps/franchises-api">
-    <img src="https://codecov.io/gh/carrilloapps/franchises-api/branch/master/graph/badge.svg" alt="📊 Code Coverage">
-  </a>
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
   </a>
