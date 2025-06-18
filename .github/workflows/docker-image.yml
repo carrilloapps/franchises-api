@@ -129,7 +129,7 @@ jobs:
           org.opencontainers.image.title=Franchises API
           org.opencontainers.image.description=A robust and scalable RESTful API for comprehensive management of franchises, branches, and products
           maintainer=carrilloapps
-          org.opencontainers.image.base.name=eclipse-temurin:17-jre-alpine
+          org.opencontainers.image.base.name=eclipse-temurin:17-jre
 
     - name: 🐳 Build and push Docker image
       id: build
