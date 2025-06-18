@@ -1,9 +1,9 @@
 services:
   mongodb:
-    image: mongo:latest
+    image: mongo:7.0
     container_name: mongodb
     ports:
-      - "27017:27017"
+      - "3082:27017"
     volumes:
       - mongodb_data:/data/db
 
@@ -15,7 +15,7 @@ services:
     ports:
       - "3081:3081"
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/franchisesdb
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:3082/franchisesdb
     depends_on:
       - mongodb
 
