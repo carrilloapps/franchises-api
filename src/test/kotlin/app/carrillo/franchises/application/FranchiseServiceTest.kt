@@ -1,136 +1,215 @@
 package app.carrillo.franchises.application
 
+import app.carrillo.franchises.application.FranchiseService
 import app.carrillo.franchises.domain.Franchise
 import app.carrillo.franchises.domain.Branch
 import app.carrillo.franchises.domain.Product
 import app.carrillo.franchises.infrastructure.FranchiseRepository
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
 
 /**
  * Unit tests for FranchiseService
- * Tests all business logic methods with proper mocking and reactive testing
  */
-@ExtendWith(MockitoExtension::class)
 @DisplayName("FranchiseService Tests")
 class FranchiseServiceTest {
 
-    @Mock
-    private lateinit var franchiseRepository: FranchiseRepository
+    private val franchiseRepository: FranchiseRepository = mock()
+    private val franchiseService = FranchiseService(franchiseRepository)
 
-    private lateinit var franchiseService: FranchiseService
+    @Test
+    @DisplayName("Should add franchise successfully")
+    fun `should add franchise successfully`() {
+        // Given
+        val franchise = Franchise(name = "Test Franchise")
+        val savedFranchise = franchise.copy(id = "generated-id")
+        
+        whenever(franchiseRepository.save(franchise)).thenReturn(Mono.just(savedFranchise))
 
-    @BeforeEach
-    fun setUp() {
-        franchiseService = FranchiseService(franchiseRepository)
+        // When & Then
+        StepVerifier.create(franchiseService.addFranchise(franchise))
+            .expectNext(savedFranchise)
+            .verifyComplete()
     }
 
-    @Nested
-    @DisplayName("Add Franchise Tests")
-    inner class AddFranchiseTests {
+    @Test
+    @DisplayName("Should get all franchises successfully")
+    fun `should get all franchises successfully`() {
+        // Given
+        val franchise1 = Franchise(id = "1", name = "Franchise 1")
+        val franchise2 = Franchise(id = "2", name = "Franchise 2")
+        
+        whenever(franchiseRepository.findAll()).thenReturn(Flux.just(franchise1, franchise2))
 
-        @Test
-        @DisplayName("Should add franchise successfully")
-        fun `should add franchise successfully`() {
-            // Given
-            val franchise = Franchise(name = "Test Franchise")
-            val savedFranchise = franchise.copy(id = "generated-id")
-            
-            `when`(franchiseRepository.save(franchise)).thenReturn(Mono.just(savedFranchise))
-
-            // When & Then
-            StepVerifier.create(franchiseService.addFranchise(franchise))
-                .expectNext(savedFranchise)
-                .verifyComplete()
-        }
-
-        @Test
-        @DisplayName("Should handle repository error when adding franchise")
-        fun `should handle repository error when adding franchise`() {
-            // Given
-            val franchise = Franchise(name = "Test Franchise")
-            val error = RuntimeException("Database error")
-            
-            `when`(franchiseRepository.save(franchise)).thenReturn(Mono.error(error))
-
-            // When & Then
-            StepVerifier.create(franchiseService.addFranchise(franchise))
-                .expectError(RuntimeException::class.java)
-                .verify()
-        }
+        // When & Then
+        StepVerifier.create(franchiseService.getAllFranchises())
+            .expectNext(franchise1)
+            .expectNext(franchise2)
+            .verifyComplete()
     }
 
-    @Nested
-    @DisplayName("Get All Franchises Tests")
-    inner class GetAllFranchisesTests {
+    @Test
+    @DisplayName("Should get franchise by id successfully")
+    fun `should get franchise by id successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val franchise = Franchise(id = franchiseId, name = "Test Franchise")
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(franchise))
 
-        @Test
-        @DisplayName("Should return all franchises")
-        fun `should return all franchises`() {
-            // Given
-            val franchise1 = Franchise(id = "1", name = "Franchise 1")
-            val franchise2 = Franchise(id = "2", name = "Franchise 2")
-            
-            `when`(franchiseRepository.findAll()).thenReturn(Flux.just(franchise1, franchise2))
-
-            // When & Then
-            StepVerifier.create(franchiseService.getAllFranchises())
-                .expectNext(franchise1)
-                .expectNext(franchise2)
-                .verifyComplete()
-        }
-
-        @Test
-        @DisplayName("Should return empty flux when no franchises exist")
-        fun `should return empty flux when no franchises exist`() {
-            // Given
-            `when`(franchiseRepository.findAll()).thenReturn(Flux.empty())
-
-            // When & Then
-            StepVerifier.create(franchiseService.getAllFranchises())
-                .verifyComplete()
-        }
+        // When & Then
+        StepVerifier.create(franchiseService.getFranchiseById(franchiseId))
+            .expectNext(franchise)
+            .verifyComplete()
     }
 
-    @Nested
-    @DisplayName("Get Franchise By ID Tests")
-    inner class GetFranchiseByIdTests {
+    @Test
+    @DisplayName("Should add branch to franchise successfully")
+    fun `should add branch to franchise successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "New Branch"
+        val existingFranchise = Franchise(id = franchiseId, name = "Test Franchise", branches = emptyList())
+        val newBranch = Branch(name = branchName, products = emptyList())
+        val updatedFranchise = existingFranchise.copy(branches = listOf(newBranch))
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(existingFranchise))
+        whenever(franchiseRepository.save(updatedFranchise)).thenReturn(Mono.just(updatedFranchise))
 
-        @Test
-        @DisplayName("Should return franchise when found")
-        fun `should return franchise when found`() {
-            // Given
-            val franchiseId = "test-id"
-            val franchise = Franchise(id = franchiseId, name = "Test Franchise")
-            
-            `when`(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(franchise))
+        // When & Then
+        val newBranchToAdd = Branch(name = branchName, products = emptyList())
+        StepVerifier.create(franchiseService.addBranchToFranchise(franchiseId, newBranchToAdd))
+            .expectNext(updatedFranchise)
+            .verifyComplete()
+    }
 
-            // When & Then
-            StepVerifier.create(franchiseService.getFranchiseById(franchiseId))
-                .expectNext(franchise)
-                .verifyComplete()
-        }
+    @Test
+    @DisplayName("Should add product to branch successfully")
+    fun `should add product to branch successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "Test Branch"
+        val existingBranch = Branch(name = branchName, products = emptyList())
+        val existingFranchise = Franchise(id = franchiseId, name = "Test Franchise", branches = listOf(existingBranch))
+        val product = Product(name = "New Product", stock = 10)
+        val updatedBranch = existingBranch.copy(products = listOf(product))
+        val updatedFranchise = existingFranchise.copy(branches = listOf(updatedBranch))
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(existingFranchise))
+        whenever(franchiseRepository.save(updatedFranchise)).thenReturn(Mono.just(updatedFranchise))
 
-        @Test
-        @DisplayName("Should return empty when franchise not found")
-        fun `should return empty when franchise not found`() {
-            // Given
-            val franchiseId = "non-existent-id"
-            
-            `when`(franchiseRepository.findById(franchiseId)).thenReturn(Mono.empty())
+        // When & Then
+        StepVerifier.create(franchiseService.addProductToBranch(franchiseId, branchName, product))
+            .expectNext(updatedFranchise)
+            .verifyComplete()
+    }
 
-            // When & Then
-            StepVerifier.create(franchiseService.getFranchiseById(franchiseId))
-                .verifyComplete()
-        }
+    @Test
+    @DisplayName("Should return empty when franchise not found")
+    fun `should return empty when franchise not found`() {
+        // Given
+        val franchiseId = "non-existent-id"
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.empty())
+
+        // When & Then
+        StepVerifier.create(franchiseService.getFranchiseById(franchiseId))
+            .verifyComplete()
+    }
+
+    @Test
+    @DisplayName("Should handle repository error when adding franchise")
+    fun `should handle repository error when adding franchise`() {
+        // Given
+        val franchise = Franchise(name = "Test Franchise")
+        val error = RuntimeException("Database error")
+        
+        whenever(franchiseRepository.save(franchise)).thenReturn(Mono.error(error))
+
+        // When & Then
+        StepVerifier.create(franchiseService.addFranchise(franchise))
+            .expectError(RuntimeException::class.java)
+            .verify()
+    }
+
+    @Test
+    @DisplayName("Should return empty flux when no franchises exist")
+    fun `should return empty flux when no franchises exist`() {
+        // Given
+        whenever(franchiseRepository.findAll()).thenReturn(Flux.empty())
+
+        // When & Then
+        StepVerifier.create(franchiseService.getAllFranchises())
+            .verifyComplete()
+    }
+
+    @Test
+    @DisplayName("Should delete product from branch successfully")
+    fun `should delete product from branch successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "Test Branch"
+        val productName = "Product to Delete"
+        val productToKeep = Product(name = "Product to Keep", stock = 5)
+        val productToDelete = Product(name = productName, stock = 10)
+        val existingBranch = Branch(name = branchName, products = listOf(productToKeep, productToDelete))
+        val existingFranchise = Franchise(id = franchiseId, name = "Test Franchise", branches = listOf(existingBranch))
+        val updatedBranch = existingBranch.copy(products = listOf(productToKeep))
+        val updatedFranchise = existingFranchise.copy(branches = listOf(updatedBranch))
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(existingFranchise))
+        whenever(franchiseRepository.save(updatedFranchise)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        StepVerifier.create(franchiseService.deleteProductFromBranch(franchiseId, branchName, productName))
+            .expectNext(updatedFranchise)
+            .verifyComplete()
+    }
+
+    @Test
+    @DisplayName("Should modify product stock successfully")
+    fun `should modify product stock successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "Test Branch"
+        val productName = "Test Product"
+        val newStock = 25
+        val originalProduct = Product(name = productName, stock = 10)
+        val existingBranch = Branch(name = branchName, products = listOf(originalProduct))
+        val existingFranchise = Franchise(id = franchiseId, name = "Test Franchise", branches = listOf(existingBranch))
+        val updatedProduct = originalProduct.copy(stock = newStock)
+        val updatedBranch = existingBranch.copy(products = listOf(updatedProduct))
+        val updatedFranchise = existingFranchise.copy(branches = listOf(updatedBranch))
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(existingFranchise))
+        whenever(franchiseRepository.save(updatedFranchise)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        StepVerifier.create(franchiseService.modifyProductStock(franchiseId, branchName, productName, newStock))
+            .expectNext(updatedFranchise)
+            .verifyComplete()
+    }
+
+    @Test
+    @DisplayName("Should update franchise name successfully")
+    fun `should update franchise name successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val newName = "Updated Franchise Name"
+        val existingFranchise = Franchise(id = franchiseId, name = "Old Name")
+        val updatedFranchise = existingFranchise.copy(name = newName)
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(existingFranchise))
+        whenever(franchiseRepository.save(updatedFranchise)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        StepVerifier.create(franchiseService.updateFranchiseName(franchiseId, newName))
+            .expectNext(updatedFranchise)
+            .verifyComplete()
     }
 }
