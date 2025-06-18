@@ -22,39 +22,7 @@ class SwaggerConfig {
             .info(Info()
                 .title("Franchises Management API")
                 .version("1.0.0")
-                .description("""
-                    # Franchises Management API
-                    
-                    A comprehensive RESTful API for managing franchises, branches, and products. 
-                    Built with Spring Boot and Kotlin, utilizing MongoDB for data persistence.
-                    
-                    ## Features
-                    - **Franchise Management**: Create and manage franchise entities
-                    - **Branch Operations**: Add and manage branches within franchises
-                    - **Product Handling**: Complete CRUD operations for products
-                    - **Inventory Analytics**: Get insights on stock levels per branch
-                    - **Dynamic Updates**: Update names, addresses, descriptions, and prices
-                    
-                    ## API Standards
-                    - **REST Compliance**: Follows RESTful design principles
-                    - **HTTP Status Codes**: Proper use of standard HTTP status codes
-                    - **Content Type**: JSON request/response format
-                    - **Error Handling**: Consistent error response structure
-                    
-                    ## Test Coverage
-                    - **Current Coverage**: 80% instruction coverage
-                    - **Minimum Threshold**: 30% (automatically verified)
-                    - **Test Count**: 60+ comprehensive tests
-                    - **Testing Layers**: Domain, Application, and Infrastructure
-                    
-                    ## Quality Assurance
-                    - Automated CI/CD pipeline with GitHub Actions
-                    - JaCoCo code coverage reporting
-                    - Comprehensive unit and integration tests
-                    - Security scanning and vulnerability detection
-                    
-                    For more information, visit the [GitHub Repository](https://github.com/carrilloapps/franchises-api)
-                """)
+                .description("RESTful API for managing franchises, branches and products. Built with Spring Boot and Kotlin, using MongoDB for data persistence.")
                 .contact(io.swagger.v3.oas.models.info.Contact()
                     .name("José Carrillo")
                     .url("https://carrillo.app")
@@ -69,18 +37,18 @@ class SwaggerConfig {
             ))
             .externalDocs(ExternalDocumentation()
                 .description("Find more info about Franchises Management API")
-                .url("https://github.com/carrilloapps/franchises-api/wiki"))
+                .url("https://github.com/carrilloapps/franchises-api"))
             .tags(listOf(
-                Tag().name("Product Management")
-                    .description("Operations for managing products within branches")
+                Tag().name("Franchise Management")
+                    .description("Operations related to franchise management, including branches and products")
                     .externalDocs(ExternalDocumentation()
-                        .description("Product Management Guide")
-                        .url("https://github.com/carrilloapps/franchises-api/wiki/product-management")),
-                Tag().name("Analytics")
-                    .description("Inventory and stock analytics endpoints")
+                        .description("Franchise Management Guide")
+                        .url("https://github.com/carrilloapps/franchises-api/blob/master/src/main/kotlin/app/carrillo/franchises/infrastructure/FranchiseController.kt")),
+                Tag().name("Home")
+                    .description("API home endpoint and general information")
                     .externalDocs(ExternalDocumentation()
-                        .description("Analytics Guide")
-                        .url("https://github.com/carrilloapps/franchises-api/wiki/analytics"))
+                        .description("Home Endpoint Documentation")
+                        .url("https://github.com/carrilloapps/franchises-api/blob/master/src/main/kotlin/app/carrillo/franchises/infrastructure/HomeController.kt"))
             ))
             .components(Components()
                 .responses(mapOf(
