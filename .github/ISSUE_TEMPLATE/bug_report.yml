@@ -1,0 +1,157 @@
+name: 🐛 Bug Report
+description: File a bug report to help us improve
+title: "[BUG]: "
+labels: ["bug", "needs-triage"]
+assignees: ["carrilloapps"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! 🙏
+        
+        Please provide as much detail as possible to help us understand and reproduce the issue.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 🐛 What happened?
+      description: A clear and concise description of what the bug is.
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: 🔄 Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: ✅ Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+      placeholder: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: ❌ Actual Behavior
+      description: A clear and concise description of what actually happened.
+      placeholder: What actually happened?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: operating-system
+    attributes:
+      label: 🖥️ Operating System
+      description: What operating system are you using?
+      options:
+        - Windows 11
+        - Windows 10
+        - macOS Ventura
+        - macOS Monterey
+        - macOS Big Sur
+        - Ubuntu 22.04
+        - Ubuntu 20.04
+        - Other Linux
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: java-version
+    attributes:
+      label: ☕ Java Version
+      description: What Java version are you using?
+      options:
+        - Java 17
+        - Java 21
+        - Java 11
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: spring-boot-version
+    attributes:
+      label: 🍃 Spring Boot Version
+      description: What version of Spring Boot are you using?
+      placeholder: e.g., 3.5.0
+    validations:
+      required: false
+
+  - type: textarea
+    id: api-details
+    attributes:
+      label: 📋 API Details (if applicable)
+      description: Provide API endpoint, request/response details
+      placeholder: |
+        Endpoint: GET /api/franchises
+        Request Body:
+        ```json
+        {
+          // Your request here
+        }
+        ```
+        Response Status: 500
+        Response Body:
+        ```json
+        {
+          // Error response here
+        }
+        ```
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 📝 Relevant Logs
+      description: Please copy and paste any relevant log output
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 🔍 Additional Context
+      description: Add any other context about the problem here
+      placeholder: Any additional information that might help us understand the issue
+    validations:
+      required: false
+
+  - type: textarea
+    id: possible-solution
+    attributes:
+      label: ✨ Possible Solution
+      description: If you have suggestions on how to fix the bug, please describe them here
+      placeholder: Your ideas for fixing this issue
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 📋 Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched for existing issues
+          required: true
+        - label: I have provided all the required information
+          required: true
+        - label: I have tested this with the latest version
+          required: false
+        - label: I have included relevant logs/screenshots
+          required: false

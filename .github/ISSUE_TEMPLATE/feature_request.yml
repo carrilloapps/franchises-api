@@ -1,0 +1,143 @@
+name: ✨ Feature Request
+description: Suggest an idea for this project
+title: "[FEATURE]: "
+labels: ["enhancement", "needs-triage"]
+assignees: ["carrilloapps"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! 🚀
+        
+        Please provide as much detail as possible to help us understand your request.
+
+  - type: textarea
+    id: problem-description
+    attributes:
+      label: 🎯 Problem Description
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: 💡 Proposed Solution
+      description: Describe the solution you'd like
+      placeholder: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Alternatives Considered
+      description: Describe alternatives you've considered
+      placeholder: A clear and concise description of any alternative solutions or features you've considered.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: feature-type
+    attributes:
+      label: 🏷️ Feature Type
+      description: What type of feature is this?
+      options:
+        - API Endpoint
+        - Database Enhancement
+        - Performance Improvement
+        - Security Enhancement
+        - Documentation
+        - Testing
+        - DevOps/CI-CD
+        - UI/UX (if applicable)
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: ⚡ Priority
+      description: How important is this feature to you?
+      options:
+        - Low - Nice to have
+        - Medium - Would be helpful
+        - High - Important for my use case
+        - Critical - Blocking my work
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: 🎯 Use Case
+      description: Describe your specific use case for this feature
+      placeholder: |
+        Explain how you would use this feature and what business value it would provide.
+        Include any specific scenarios or workflows.
+    validations:
+      required: true
+
+  - type: textarea
+    id: api-design
+    attributes:
+      label: 📋 API Design (if applicable)
+      description: If this is an API feature, provide your proposed endpoint design
+      placeholder: |
+        Endpoint: POST /api/franchises/{id}/branches
+        Request Body:
+        ```json
+        {
+          "name": "New Branch",
+          "location": "City, Country"
+        }
+        ```
+        Response:
+        ```json
+        {
+          "id": "branch-id",
+          "name": "New Branch",
+          "location": "City, Country",
+          "franchiseId": "franchise-id"
+        }
+        ```
+    validations:
+      required: false
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: ✅ Acceptance Criteria
+      description: Define what "done" looks like for this feature
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 🔍 Additional Context
+      description: Add any other context, screenshots, mockups, or examples about the feature request here
+      placeholder: Any additional information that might help us understand the feature request
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 📋 Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched for existing feature requests
+          required: true
+        - label: I have provided a clear description of the problem and solution
+          required: true
+        - label: I have considered alternative solutions
+          required: false
+        - label: I am willing to help implement this feature
+          required: false
