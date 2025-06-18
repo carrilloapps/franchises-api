@@ -1,143 +1,136 @@
 package app.carrillo.franchises.application
 
+import app.carrillo.franchises.domain.Franchise
+import app.carrillo.franchises.domain.Branch
+import app.carrillo.franchises.domain.Product
+import app.carrillo.franchises.infrastructure.FranchiseRepository
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.junit.jupiter.MockitoExtension
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
+import reactor.test.StepVerifier
 
 /**
- * Basic unit tests for FranchiseService
- * Simple implementation to avoid compilation issues
+ * Unit tests for FranchiseService
+ * Tests all business logic methods with proper mocking and reactive testing
  */
+@ExtendWith(MockitoExtension::class)
+@DisplayName("FranchiseService Tests")
 class FranchiseServiceTest {
 
-    /**
-     * Test that the test class can be instantiated
-     */
-    @Test
-    fun `test class should be instantiable`() {
-        // Given
-        val testInstance = FranchiseServiceTest()
-        
-        // Then
-        assertNotNull(testInstance)
+    @Mock
+    private lateinit var franchiseRepository: FranchiseRepository
+
+    private lateinit var franchiseService: FranchiseService
+
+    @BeforeEach
+    fun setUp() {
+        franchiseService = FranchiseService(franchiseRepository)
     }
 
-    /**
-     * Test basic assertion functionality
-     */
-    @Test
-    fun `basic assertions should work`() {
-        // Given
-        val expectedValue = "test"
-        val actualValue = "test"
-        
-        // Then
-        assertEquals(expectedValue, actualValue)
-        assertTrue(true)
-        assertFalse(false)
-    }
+    @Nested
+    @DisplayName("Add Franchise Tests")
+    inner class AddFranchiseTests {
 
-    /**
-     * Test string operations
-     */
-    @Test
-    fun `string operations should work correctly`() {
-        // Given
-        val franchiseName = "Test Franchise"
-        val branchName = "Test Branch"
-        
-        // When
-        val combinedName = "$franchiseName - $branchName"
-        
-        // Then
-        assertEquals("Test Franchise - Test Branch", combinedName)
-        assertTrue(combinedName.contains("Test"))
-    }
+        @Test
+        @DisplayName("Should add franchise successfully")
+        fun `should add franchise successfully`() {
+            // Given
+            val franchise = Franchise(name = "Test Franchise")
+            val savedFranchise = franchise.copy(id = "generated-id")
+            
+            `when`(franchiseRepository.save(franchise)).thenReturn(Mono.just(savedFranchise))
 
-    /**
-     * Test list operations
-     */
-    @Test
-    fun `list operations should work correctly`() {
-        // Given
-        val items = mutableListOf<String>()
-        
-        // When
-        items.add("Franchise 1")
-        items.add("Franchise 2")
-        
-        // Then
-        assertEquals(2, items.size)
-        assertTrue(items.contains("Franchise 1"))
-        assertTrue(items.contains("Franchise 2"))
-    }
-
-    /**
-     * Test map operations
-     */
-    @Test
-    fun `map operations should work correctly`() {
-        // Given
-        val franchiseData = mutableMapOf<String, String>()
-        
-        // When
-        franchiseData["name"] = "Test Franchise"
-        franchiseData["address"] = "Test Address"
-        
-        // Then
-        assertEquals("Test Franchise", franchiseData["name"])
-        assertEquals("Test Address", franchiseData["address"])
-        assertEquals(2, franchiseData.size)
-    }
-
-    /**
-     * Test number operations
-     */
-    @Test
-    fun `number operations should work correctly`() {
-        // Given
-        val stock1 = 10
-        val stock2 = 15
-        val price = 100.0
-        
-        // When
-        val totalStock = stock1 + stock2
-        val discountedPrice = price * 0.9
-        
-        // Then
-        assertEquals(25, totalStock)
-        assertEquals(90.0, discountedPrice, 0.01)
-        assertTrue(totalStock > 20)
-        assertTrue(discountedPrice < price)
-    }
-
-    /**
-     * Test null safety
-     */
-    @Test
-    fun `null safety should work correctly`() {
-        // Given
-        val nullableString: String? = null
-        val nonNullString: String? = "test"
-        
-        // Then
-        assertNull(nullableString)
-        assertNotNull(nonNullString)
-        assertEquals("test", nonNullString)
-    }
-
-    /**
-     * Test exception handling
-     */
-    @Test
-    fun `exception handling should work correctly`() {
-        // Given & When & Then
-        assertThrows(IllegalArgumentException::class.java) {
-            throw IllegalArgumentException("Test exception")
+            // When & Then
+            StepVerifier.create(franchiseService.addFranchise(franchise))
+                .expectNext(savedFranchise)
+                .verifyComplete()
         }
-        
-        assertDoesNotThrow {
-            val result = "No exception here"
-            assertEquals("No exception here", result)
+
+        @Test
+        @DisplayName("Should handle repository error when adding franchise")
+        fun `should handle repository error when adding franchise`() {
+            // Given
+            val franchise = Franchise(name = "Test Franchise")
+            val error = RuntimeException("Database error")
+            
+            `when`(franchiseRepository.save(franchise)).thenReturn(Mono.error(error))
+
+            // When & Then
+            StepVerifier.create(franchiseService.addFranchise(franchise))
+                .expectError(RuntimeException::class.java)
+                .verify()
+        }
+    }
+
+    @Nested
+    @DisplayName("Get All Franchises Tests")
+    inner class GetAllFranchisesTests {
+
+        @Test
+        @DisplayName("Should return all franchises")
+        fun `should return all franchises`() {
+            // Given
+            val franchise1 = Franchise(id = "1", name = "Franchise 1")
+            val franchise2 = Franchise(id = "2", name = "Franchise 2")
+            
+            `when`(franchiseRepository.findAll()).thenReturn(Flux.just(franchise1, franchise2))
+
+            // When & Then
+            StepVerifier.create(franchiseService.getAllFranchises())
+                .expectNext(franchise1)
+                .expectNext(franchise2)
+                .verifyComplete()
+        }
+
+        @Test
+        @DisplayName("Should return empty flux when no franchises exist")
+        fun `should return empty flux when no franchises exist`() {
+            // Given
+            `when`(franchiseRepository.findAll()).thenReturn(Flux.empty())
+
+            // When & Then
+            StepVerifier.create(franchiseService.getAllFranchises())
+                .verifyComplete()
+        }
+    }
+
+    @Nested
+    @DisplayName("Get Franchise By ID Tests")
+    inner class GetFranchiseByIdTests {
+
+        @Test
+        @DisplayName("Should return franchise when found")
+        fun `should return franchise when found`() {
+            // Given
+            val franchiseId = "test-id"
+            val franchise = Franchise(id = franchiseId, name = "Test Franchise")
+            
+            `when`(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(franchise))
+
+            // When & Then
+            StepVerifier.create(franchiseService.getFranchiseById(franchiseId))
+                .expectNext(franchise)
+                .verifyComplete()
+        }
+
+        @Test
+        @DisplayName("Should return empty when franchise not found")
+        fun `should return empty when franchise not found`() {
+            // Given
+            val franchiseId = "non-existent-id"
+            
+            `when`(franchiseRepository.findById(franchiseId)).thenReturn(Mono.empty())
+
+            // When & Then
+            StepVerifier.create(franchiseService.getFranchiseById(franchiseId))
+                .verifyComplete()
         }
     }
 }
