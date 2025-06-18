@@ -116,4 +116,65 @@ class FranchiseControllerTest {
             .expectBody(Franchise::class.java)
             .isEqualTo(updatedFranchise)
     }
+
+    @Test
+    @DisplayName("Should add product to branch successfully")
+    fun `should add product to branch successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "Test Branch"
+        val product = Product(name = "Test Product", stock = 10, price = 100.0)
+        val updatedFranchise = Franchise(id = franchiseId, name = "Test Franchise")
+        
+        whenever(franchiseService.addProductToBranch(franchiseId, branchName, product)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        webTestClient.post()
+            .uri("/franchises/{franchiseId}/branches/{branchName}/products", franchiseId, branchName)
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(product)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(Franchise::class.java)
+            .isEqualTo(updatedFranchise)
+    }
+
+    @Test
+    @DisplayName("Should delete product from branch successfully")
+    fun `should delete product from branch successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "Test Branch"
+        val productName = "Test Product"
+        val updatedFranchise = Franchise(id = franchiseId, name = "Test Franchise")
+        
+        whenever(franchiseService.deleteProductFromBranch(franchiseId, branchName, productName)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        webTestClient.delete()
+            .uri("/franchises/{franchiseId}/branches/{branchName}/products/{productName}", franchiseId, branchName, productName)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(Franchise::class.java)
+            .isEqualTo(updatedFranchise)
+    }
+
+    @Test
+    @DisplayName("Should update franchise name successfully")
+    fun `should update franchise name successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val newName = "Updated Franchise Name"
+        val updatedFranchise = Franchise(id = franchiseId, name = newName)
+        
+        whenever(franchiseService.updateFranchiseName(franchiseId, newName)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        webTestClient.put()
+            .uri("/franchises/{franchiseId}/name?newName={newName}", franchiseId, newName)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(Franchise::class.java)
+            .isEqualTo(updatedFranchise)
+    }
 }
