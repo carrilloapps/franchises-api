@@ -1,6 +1,6 @@
 # Changelog
 
-## [v1.0.0] - 2024-12-19
+## [v1.0.0] - 2025-06-18
 
 The `v1.0.0` version of the "Franchises API" project includes the following features and improvements:
 
