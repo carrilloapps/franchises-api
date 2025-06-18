@@ -17,7 +17,7 @@ services:
     ports:
       - "3081:3081"
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongodb:3082/franchisesdb
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/franchisesdb
     depends_on:
       - mongodb
     networks:
