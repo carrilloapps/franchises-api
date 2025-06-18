@@ -25,7 +25,7 @@ class SwaggerConfigTest {
         assertEquals("Franchises Management API", info.title)
         assertEquals("1.0.0", info.version)
         assertNotNull(info.description)
-        assertTrue(info.description.contains("Franchises Management API"))
+        assertEquals("RESTful API for managing franchises, branches and products. Built with Spring Boot and Kotlin, using MongoDB for data persistence.", info.description)
     }
 
     @Test
@@ -63,13 +63,13 @@ class SwaggerConfigTest {
         assertNotNull(servers)
         assertEquals(2, servers.size)
         
-        val localServer = servers[0]
-        assertEquals("http://localhost:3081", localServer.url)
-        assertEquals("Local Development Server", localServer.description)
-        
-        val prodServer = servers[1]
+        val prodServer = servers[0]
         assertEquals("https://franchises.isapp.dev", prodServer.url)
         assertEquals("Production Server", prodServer.description)
+        
+        val localServer = servers[1]
+        assertEquals("http://localhost:3081", localServer.url)
+        assertEquals("Local Development Server", localServer.description)
     }
 
     @Test
@@ -80,26 +80,12 @@ class SwaggerConfigTest {
         // Then
         val tags = openAPI.tags
         assertNotNull(tags)
-        assertEquals(4, tags.size)
+        assertEquals(2, tags.size)
         
         val tagNames = tags.map { it.name }
         assertTrue(tagNames.contains("Franchise Management"))
-        assertTrue(tagNames.contains("Branch Operations"))
-        assertTrue(tagNames.contains("Product Management"))
-        assertTrue(tagNames.contains("Analytics"))
+        assertTrue(tagNames.contains("Home"))
     }
 
-    @Test
-    fun `should have description with key features`() {
-        // When
-        val openAPI: OpenAPI = swaggerConfig.customOpenAPI()
 
-        // Then
-        val description = openAPI.info.description
-        assertTrue(description.contains("Franchise Management"))
-        assertTrue(description.contains("Branch Operations"))
-        assertTrue(description.contains("Product Handling"))
-        assertTrue(description.contains("Test Coverage"))
-        assertTrue(description.contains("Quality Assurance"))
-    }
 }

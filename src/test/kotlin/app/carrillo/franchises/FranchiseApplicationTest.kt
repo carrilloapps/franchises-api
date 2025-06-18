@@ -123,10 +123,11 @@ class FranchiseApplicationTest {
             // Then
             assertNotNull(componentScanAnnotation)
             val basePackages = componentScanAnnotation.basePackages
-            assertEquals(3, basePackages.size)
+            assertEquals(4, basePackages.size)
             assertTrue(basePackages.contains("app.carrillo.franchises.infrastructure"))
             assertTrue(basePackages.contains("app.carrillo.franchises.application"))
             assertTrue(basePackages.contains("app.carrillo.franchises.domain"))
+            assertTrue(basePackages.contains("app.carrillo.franchises.config"))
         }
     }
 
