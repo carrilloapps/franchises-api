@@ -22,6 +22,9 @@ jobs:
     name: 🧪 Test Suite
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      pull-requests: write
+      checks: write
     
     services:
       mongodb:
@@ -255,6 +258,7 @@ jobs:
         path: |
           build/reports/dependency-check-report.html
           reports/
+          dependency-check-report/
         retention-days: 30
         
   notify:
