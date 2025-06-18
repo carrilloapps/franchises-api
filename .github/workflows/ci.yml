@@ -170,23 +170,6 @@ jobs:
       run: ./gradlew build -x test --build-cache --parallel
       env:
         SPRING_PROFILES_ACTIVE: ${{ matrix.profile }}
-      
-    - name: 🐳 Build Docker image
-      if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && matrix.profile == 'prod'
-      run: |
-        echo "🐳 Building Docker image..."
-        docker build -t franchises-app:${{ github.sha }} .
-        docker tag franchises-app:${{ github.sha }} franchises-app:latest
-        docker tag franchises-app:${{ github.sha }} franchises-app:${{ github.ref_name }}
-        echo "✅ Docker image built successfully"
-        
-    - name: 🔍 Docker image scan
-      if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && matrix.profile == 'prod'
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: 'franchises-app:${{ github.sha }}'
-        format: 'sarif'
-        output: 'trivy-results.sarif'
         
     - name: 📤 Upload build artifacts
       uses: actions/upload-artifact@v4
@@ -196,12 +179,6 @@ jobs:
           build/libs/
           build/distributions/
         retention-days: 7
-        
-    - name: 📊 Upload Docker scan results
-      if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && matrix.profile == 'prod'
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: 'trivy-results.sarif'
           
   security-scan:
     name: 🔒 Security Analysis
