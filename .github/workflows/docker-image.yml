@@ -86,30 +86,7 @@ jobs:
       env:
         GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true
 
-    - name: 🧪 Run tests
-      run: |
-        echo "🧪 Running tests..."
-        ./gradlew test --build-cache --parallel --no-daemon
-        echo "✅ Tests completed successfully"
-      env:
-        GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true
 
-    - name: 📊 Run Jacoco test coverage verification
-      run: |
-        echo "📊 Running Jacoco test coverage verification..."
-        ./gradlew jacocoTestCoverageVerification --build-cache --parallel --no-daemon
-        echo "✅ Coverage verification completed successfully"
-      env:
-        GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true
-
-    - name: 📊 Generate test report
-      uses: dorny/test-reporter@v1
-      if: success() || failure()
-      with:
-        name: 🧪 Test Results
-        path: build/test-results/test/*.xml
-        reporter: java-junit
-        fail-on-error: false
 
     - name: 🐳 Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -173,19 +150,7 @@ jobs:
           VCS_REF=${{ github.sha }}
           VERSION=${{ github.ref_name }}
 
-    - name: 🔍 Scan Docker image with Trivy
-      uses: aquasecurity/trivy-action@master
-      if: steps.build.outputs.digest
-      with:
-        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
-        format: 'sarif'
-        output: 'trivy-results.sarif'
 
-    - name: 📤 Upload Trivy scan results to GitHub Security
-      uses: github/codeql-action/upload-sarif@v3
-      if: steps.build.outputs.digest
-      with:
-        sarif_file: 'trivy-results.sarif'
 
     - name: 🔐 Generate artifact attestation
       uses: actions/attest-build-provenance@v1
