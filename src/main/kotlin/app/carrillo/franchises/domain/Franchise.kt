@@ -3,6 +3,7 @@ package app.carrillo.franchises.domain
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
+import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * Data class representing a Franchise.
@@ -12,12 +13,22 @@ import org.springframework.data.mongodb.core.mapping.Document
  * @property branches A list of branches belonging to this franchise.
  */
 @Document(collection = "franchises")
+@Schema(description = "Represents a franchise entity with its branches and associated information")
 data class Franchise(
     @Id
+    @Schema(description = "Unique identifier of the franchise", example = "507f1f77bcf86cd799439011", accessMode = Schema.AccessMode.READ_ONLY)
     val id: String = ObjectId.get().toHexString(),
+    
+    @Schema(description = "Name of the franchise", example = "Tech Solutions Franchise", required = true)
     val name: String,
+    
+    @Schema(description = "Physical address of the franchise headquarters", example = "123 Main Street, Downtown")
     val address: String? = null,
+    
+    @Schema(description = "Detailed description of the franchise business model and services", example = "A technology-focused franchise specializing in electronic devices and accessories")
     val description: String? = null,
+    
+    @Schema(description = "List of branches belonging to this franchise")
     val branches: List<Branch> = emptyList()
 )
 
@@ -27,8 +38,12 @@ data class Franchise(
  * @property name The name of the branch.
  * @property products A list of products offered in this branch.
  */
+@Schema(description = "Represents a branch within a franchise")
 data class Branch(
+    @Schema(description = "Name of the branch", example = "Downtown Branch", required = true)
     val name: String,
+    
+    @Schema(description = "List of products available in this branch")
     val products: List<Product> = emptyList()
 )
 
@@ -38,8 +53,14 @@ data class Branch(
  * @property name The name of the product.
  * @property stock The quantity of the product in stock.
  */
+@Schema(description = "Represents a product available in a branch")
 data class Product(
+    @Schema(description = "Name of the product", example = "Gaming Laptop", required = true)
     val name: String,
+    
+    @Schema(description = "Quantity of the product in stock", example = "50", required = true, minimum = "0")
     val stock: Int,
+    
+    @Schema(description = "Price of the product in USD", example = "999.99", minimum = "0")
     val price: Double? = null
 )

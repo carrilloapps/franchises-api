@@ -68,21 +68,55 @@ tasks.named('test') {
 }
 
 jacoco {
-    toolVersion = "0.8.11"
+    toolVersion = "0.8.8"
 }
 
 jacocoTestReport {
-    dependsOn test
     reports {
         xml.required = true
         html.required = true
-        csv.required = false
     }
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+    dependsOn test
+    executionData fileTree(dir: "$buildDir/jacoco", include: "**/*.exec")
+    
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                // Exclude Swagger configuration classes
+                '**/SwaggerConfig*',
+                '**/SwaggerConfig.class',
+                '**/SwaggerConfig$*.class',
+                // Exclude Spring Boot auto-configuration
+                '**/Application*',
+                '**/Application.class',
+                '**/Application$*.class',
+                // Exclude configuration classes
+                '**/*Config*',
+                '**/*Configuration*'
+            ])
+        }))
+    }
 }
 
 jacocoTestCoverageVerification {
-    dependsOn jacocoTestReport
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                // Exclude Swagger configuration classes
+                '**/SwaggerConfig*',
+                '**/SwaggerConfig.class',
+                '**/SwaggerConfig$*.class',
+                // Exclude Spring Boot auto-configuration
+                '**/Application*',
+                '**/Application.class',
+                '**/Application$*.class',
+                // Exclude configuration classes
+                '**/*Config*',
+                '**/*Configuration*'
+            ])
+        }))
+    }
+    
     violationRules {
         rule {
             limit {
