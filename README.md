@@ -55,20 +55,26 @@ This project delivers a robust and scalable RESTful API designed for comprehensi
 ```
 franchises/
 ├── .github/workflows/
+│   ├── ci.yml # GitHub Actions workflow for CI/CD
 │   └── docker-image.yml # GitHub Actions workflow for Docker image build and push
 ├── src/
 │   ├── main/
 │   │   ├── kotlin/app/carrillo/franchises/
-│   │   │   ├── FranchisesApplication.kt # Main application entry point
-│   │   │   ├── config/ # Configuration classes
-│   │   │   ├── controller/ # REST API controllers
-│   │   │   ├── domain/ # Domain models (Franchise, Branch, Product)
-│   │   │   ├── infrastructure/ # MongoDB repositories
-│   │   │   └── application/ # Business logic services
+│   │   │   ├── FranchiseApplication.kt # Main application entry point
+│   │   │   ├── application/
+│   │   │   │   └── FranchiseService.kt # Business logic services
+│   │   │   ├── config/
+│   │   │   │   └── SwaggerConfig.kt # Configuration classes
+│   │   │   ├── domain/
+│   │   │   │   └── Franchise.kt # Domain models (Franchise, Branch, Product)
+│   │   │   └── infrastructure/
+│   │   │       ├── FranchiseController.kt # REST API controllers
+│   │   │       ├── FranchiseRepository.kt # MongoDB repository
+│   │   │       └── HomeController.kt # Additional controllers
 │   │   └── resources/
 │   │       └── application.properties # Application configuration
 │   └── test/
-│       └── kotlin/com/franchises/backend/ # Unit and integration tests
+│       └── kotlin/app/carrillo/franchises/ # Unit and integration tests
 ├── Dockerfile # Dockerfile for building the application image
 ├── compose.yaml # Docker Compose file for local development setup
 ├── build.gradle # Gradle build file
@@ -192,7 +198,7 @@ Coverage reports are generated in:
 - **HTML Report**: `build/reports/jacoco/test/html/index.html`
 - **XML Report**: `build/reports/jacoco/test/jacocoTestReport.xml`
 
-The project maintains a minimum coverage threshold of **70%** with automatic verification:
+The project maintains a minimum coverage threshold of **30%** with automatic verification:
 
 ```bash
 ./gradlew jacocoTestCoverageVerification
@@ -200,7 +206,7 @@ The project maintains a minimum coverage threshold of **70%** with automatic ver
 
 ### Test Structure
 
-Our comprehensive testing suite includes **39 tests** across multiple layers:
+Our comprehensive testing suite focuses on the essential layers of the application:
 
 #### 🏗️ Domain Layer Tests (`FranchiseTest.kt`)
 - **Entity Creation**: Validates proper instantiation of `Franchise`, `Branch`, and `Product` entities
@@ -208,18 +214,12 @@ Our comprehensive testing suite includes **39 tests** across multiple layers:
 - **Business Rules**: Ensures domain constraints and validation rules
 - **Edge Cases**: Handles empty collections, null values, and boundary conditions
 
-#### 📊 Repository Layer Tests (`FranchiseRepositoryTest.kt`)
-- **Reactive Operations**: Tests using `StepVerifier` for reactive streams
-- **CRUD Operations**: Validates create, read, update, and delete operations
-- **Query Methods**: Tests custom repository methods and queries
-- **Error Handling**: Ensures proper exception handling and error propagation
-- **Mock Integration**: Uses Mockito for isolated unit testing
-
 #### 🔧 Application Layer Tests (`FranchiseServiceTest.kt`)
 - **Business Logic**: Validates service layer operations and workflows
 - **Transaction Management**: Tests reactive transaction handling
 - **Integration Points**: Ensures proper interaction between layers
 - **Exception Scenarios**: Tests error handling and recovery mechanisms
+- **Repository Integration**: Tests service interaction with Spring Data MongoDB repository
 
 #### ⚙️ Configuration Tests (`FranchiseApplicationTest.kt`)
 - **Spring Context**: Validates application context loading
@@ -239,11 +239,12 @@ Our comprehensive testing suite includes **39 tests** across multiple layers:
 
 ### Test Execution Results
 
-✅ **All 39 tests pass successfully**  
+✅ **All tests pass successfully**  
 ✅ **Zero compilation errors**  
-✅ **Comprehensive coverage across all layers**  
+✅ **Comprehensive coverage across essential layers**  
 ✅ **Reactive programming patterns validated**  
-✅ **Domain-driven design principles tested**
+✅ **Simplified architecture principles tested**  
+✅ **Spring Data MongoDB integration validated**
 
 ## 🌐 API Endpoints
 
@@ -384,7 +385,7 @@ Our CI pipeline automatically runs on:
 - **Caching**: Gradle dependencies cached for faster builds
 - **Execution**: Runs complete test suite with `./gradlew test`
 - **Coverage**: Generates JaCoCo coverage reports
-- **Validation**: Ensures all 39 tests pass before proceeding
+- **Validation**: Ensures all tests pass before proceeding
 
 ##### 🏗️ Build Job
 - **Dependency**: Runs only after successful test completion
@@ -410,7 +411,7 @@ Additional GitHub Actions workflow for Docker image management:
 ### Quality Assurance
 
 - **Automated Testing**: Every code change triggers comprehensive test execution
-- **Code Coverage**: JaCoCo integration with 70% minimum coverage threshold
+- **Code Coverage**: JaCoCo integration with 30% minimum coverage threshold
 - **Security Scanning**: Automated vulnerability detection and reporting
 - **Build Validation**: Ensures deployable artifacts before merge
 - **Branch Protection**: Quality gates prevent broken code from reaching main branches

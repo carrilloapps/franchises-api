@@ -65,8 +65,18 @@ jobs:
     - name: 🔧 Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    - name: 🔍 Ensure gradle-wrapper.jar exists
+      run: |
+        if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+          echo "⬇️ Downloading gradle-wrapper.jar..."
+          curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.5.0/gradle/wrapper/gradle-wrapper.jar
+          echo "✅ gradle-wrapper.jar downloaded successfully"
+        else
+          echo "✅ gradle-wrapper.jar already exists"
+        fi
+
     - name: 📋 Validate Gradle wrapper
-      uses: gradle/wrapper-validation-action@v2
+      uses: gradle/actions/wrapper-validation@v3
 
     - name: 🏗️ Build application
       run: |
@@ -81,6 +91,14 @@ jobs:
         echo "🧪 Running tests..."
         ./gradlew test --build-cache --parallel --no-daemon
         echo "✅ Tests completed successfully"
+      env:
+        GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true
+
+    - name: 📊 Run Jacoco test coverage verification
+      run: |
+        echo "📊 Running Jacoco test coverage verification..."
+        ./gradlew jacocoTestCoverageVerification --build-cache --parallel --no-daemon
+        echo "✅ Coverage verification completed successfully"
       env:
         GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true
 

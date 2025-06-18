@@ -1,14 +1,17 @@
-FROM gradle:8.5-jdk17-alpine AS build
+FROM eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /app
-COPY --chown=gradle:gradle . /app
-RUN gradle bootJar --no-daemon
+COPY gradle gradle
+COPY gradlew gradlew.bat build.gradle settings.gradle ./
+COPY src src
+RUN chmod +x gradlew
+RUN ./gradlew bootJar --no-daemon
 
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
 
 # Create a non-root user
-RUN addgroup --system spring && adduser --system --ingroup spring spring
+RUN addgroup -S spring && adduser -S spring -G spring
 USER spring
 
 # Set JAVA_OPTS for memory management
@@ -16,4 +19,4 @@ ENV JAVA_OPTS="-Xmx256m -Xms256m"
 
 EXPOSE 3081
 
-ENTRYPOINT sh -c "java ${JAVA_OPTS} -jar /app/app.jar"
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app/app.jar"]

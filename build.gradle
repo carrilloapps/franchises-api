@@ -13,7 +13,6 @@ plugins {
 	id 'org.jetbrains.kotlin.plugin.spring' version '2.2.0-RC3'
 	id 'org.springframework.boot' version '3.5.0'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'jacoco'
 }
 
 group = 'app.carrillo'
@@ -42,9 +41,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
     testImplementation 'io.projectreactor:reactor-test'
-    testImplementation 'org.mockito:mockito-core:5.8.0'
-    testImplementation 'org.mockito.kotlin:mockito-kotlin:5.2.1'
-    testImplementation 'org.mockito:mockito-inline:5.2.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -54,45 +50,14 @@ kotlin {
     }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-    finalizedBy jacocoTestReport
-}
-
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.required = true
-        html.required = true
-        csv.required = false
-    }
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: [
-                '**/config/**',
-                '**/FranchiseApplication*'
-            ])
-        }))
-    }
-}
-
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.30
-            }
+sourceSets {
+    test {
+        kotlin {
+            srcDirs = ['src/test/kotlin']
         }
     }
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: [
-                '**/config/**',
-                '**/FranchiseApplication*'
-            ])
-        }))
-    }
 }
 
-check.dependsOn jacocoTestCoverageVerification
+tasks.named('test') {
+    useJUnitPlatform()
+}

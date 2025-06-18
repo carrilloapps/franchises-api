@@ -6,6 +6,8 @@ services:
       - "3082:27017"
     volumes:
       - mongodb_data:/data/db
+    networks:
+      - franchises-network
 
   app:
     build:
@@ -15,9 +17,15 @@ services:
     ports:
       - "3081:3081"
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongodb:3082/franchisesdb
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/franchisesdb
     depends_on:
       - mongodb
+    networks:
+      - franchises-network
 
 volumes:
   mongodb_data:
+
+networks:
+  franchises-network:
+    driver: bridge
