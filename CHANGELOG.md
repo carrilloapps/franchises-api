@@ -1,5 +1,15 @@
 # Changelog
 
+## [v1.0.1] - 2025-06-18
+
+The `v1.0.1` version of the "Franchises API" project includes the following features and improvements:
+
+### Fixed
+- Fixed `HttpError: Resource not accessible by integration` in GitHub Actions by adding `pull-requests: write` and `checks: write` permissions to the `test` job.
+- Corrected artifact path for security scan results in GitHub Actions from `build/reports/dependency-check-report.html reports/` to `dependency-check-report/`.
+- Fixed Swagger visibility issues, making the API documentation fully accessible.
+- Added local and production server configurations to Swagger documentation.
+
 ## [v1.0.0] - 2025-06-18
 
 The `v1.0.0` version of the "Franchises API" project includes the following features and improvements:
