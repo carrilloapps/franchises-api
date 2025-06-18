@@ -1,7 +1,7 @@
 services:
-  mongodb:
+  mongo:
     image: mongo:7.0
-    container_name: mongodb
+    container_name: mongo
     ports:
       - "3082:27017"
     volumes:
@@ -9,14 +9,7 @@ services:
     networks:
       franchises-network:
         aliases:
-          - mongodb
-          - database
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
+          - mongo
 
   app:
     build:
@@ -26,11 +19,11 @@ services:
     ports:
       - "3081:3081"
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/franchisesdb
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/franchisesdb
       SPRING_DATA_MONGODB_CONNECTION_TIMEOUT: 20000
       SPRING_DATA_MONGODB_SOCKET_TIMEOUT: 0
     depends_on:
-      mongodb:
+      mongo:
         condition: service_healthy
     networks:
       - franchises-network
