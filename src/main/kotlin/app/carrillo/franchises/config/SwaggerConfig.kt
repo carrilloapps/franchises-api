@@ -64,8 +64,8 @@ class SwaggerConfig {
                     .url("https://opensource.org/licenses/MIT"))
                 .termsOfService("https://carrillo.app/terms"))
             .servers(listOf(
-                Server().url("http://localhost:3081").description("Local Development Server"),
-                Server().url("https://franchises.isapp.dev").description("Production Server")
+                Server().url("https://franchises.isapp.dev").description("Production Server"),
+                Server().url("http://localhost:3081").description("Local Development Server")
             ))
             .externalDocs(ExternalDocumentation()
                 .description("Find more info about Franchises Management API")
