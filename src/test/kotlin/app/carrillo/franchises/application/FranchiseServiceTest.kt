@@ -212,4 +212,109 @@ class FranchiseServiceTest {
             .expectNext(updatedFranchise)
             .verifyComplete()
     }
+
+    @Test
+    @DisplayName("Should update franchise address successfully")
+    fun `should update franchise address successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val newAddress = "123 New Street, New City"
+        val existingFranchise = Franchise(id = franchiseId, name = "Test Franchise", address = "Old Address")
+        val updatedFranchise = existingFranchise.copy(address = newAddress)
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(existingFranchise))
+        whenever(franchiseRepository.save(updatedFranchise)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        StepVerifier.create(franchiseService.updateFranchiseAddress(franchiseId, newAddress))
+            .expectNext(updatedFranchise)
+            .verifyComplete()
+    }
+
+    @Test
+    @DisplayName("Should update franchise description successfully")
+    fun `should update franchise description successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val newDescription = "Updated franchise description with new details"
+        val existingFranchise = Franchise(id = franchiseId, name = "Test Franchise", description = "Old description")
+        val updatedFranchise = existingFranchise.copy(description = newDescription)
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(existingFranchise))
+        whenever(franchiseRepository.save(updatedFranchise)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        StepVerifier.create(franchiseService.updateFranchiseDescription(franchiseId, newDescription))
+            .expectNext(updatedFranchise)
+            .verifyComplete()
+    }
+
+    @Test
+    @DisplayName("Should update branch name successfully")
+    fun `should update branch name successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val oldBranchName = "Old Branch"
+        val newBranchName = "New Branch Name"
+        val branch = Branch(name = oldBranchName)
+        val existingFranchise = Franchise(id = franchiseId, name = "Test Franchise", branches = mutableListOf(branch))
+        val updatedBranch = branch.copy(name = newBranchName)
+        val updatedFranchise = existingFranchise.copy(branches = mutableListOf(updatedBranch))
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(existingFranchise))
+        whenever(franchiseRepository.save(updatedFranchise)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        StepVerifier.create(franchiseService.updateBranchName(franchiseId, oldBranchName, newBranchName))
+            .expectNext(updatedFranchise)
+            .verifyComplete()
+    }
+
+    @Test
+    @DisplayName("Should update product name successfully")
+    fun `should update product name successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "Test Branch"
+        val oldProductName = "Old Product"
+        val newProductName = "New Product Name"
+        val product = Product(name = oldProductName, stock = 10, price = 100.0)
+        val branch = Branch(name = branchName, products = mutableListOf(product))
+        val existingFranchise = Franchise(id = franchiseId, name = "Test Franchise", branches = mutableListOf(branch))
+        val updatedProduct = product.copy(name = newProductName)
+        val updatedBranch = branch.copy(products = mutableListOf(updatedProduct))
+        val updatedFranchise = existingFranchise.copy(branches = mutableListOf(updatedBranch))
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(existingFranchise))
+        whenever(franchiseRepository.save(updatedFranchise)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        StepVerifier.create(franchiseService.updateProductName(franchiseId, branchName, oldProductName, newProductName))
+            .expectNext(updatedFranchise)
+            .verifyComplete()
+    }
+
+    @Test
+    @DisplayName("Should update product price successfully")
+    fun `should update product price successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "Test Branch"
+        val productName = "Test Product"
+        val newPrice = 150.0
+        val product = Product(name = productName, stock = 10, price = 100.0)
+        val branch = Branch(name = branchName, products = mutableListOf(product))
+        val existingFranchise = Franchise(id = franchiseId, name = "Test Franchise", branches = mutableListOf(branch))
+        val updatedProduct = product.copy(price = newPrice)
+        val updatedBranch = branch.copy(products = mutableListOf(updatedProduct))
+        val updatedFranchise = existingFranchise.copy(branches = mutableListOf(updatedBranch))
+        
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(existingFranchise))
+        whenever(franchiseRepository.save(updatedFranchise)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        StepVerifier.create(franchiseService.updateProductPrice(franchiseId, branchName, productName, newPrice))
+            .expectNext(updatedFranchise)
+            .verifyComplete()
+    }
 }
