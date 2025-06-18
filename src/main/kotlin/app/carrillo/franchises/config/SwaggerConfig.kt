@@ -71,16 +71,6 @@ class SwaggerConfig {
                 .description("Find more info about Franchises Management API")
                 .url("https://github.com/carrilloapps/franchises-api/wiki"))
             .tags(listOf(
-                Tag().name("Franchise Management")
-                    .description("Operations related to franchise management")
-                    .externalDocs(ExternalDocumentation()
-                        .description("Franchise Management Guide")
-                        .url("https://github.com/carrilloapps/franchises-api/wiki/franchise-management")),
-                Tag().name("Branch Operations")
-                    .description("Operations for managing branches within franchises")
-                    .externalDocs(ExternalDocumentation()
-                        .description("Branch Operations Guide")
-                        .url("https://github.com/carrilloapps/franchises-api/wiki/branch-operations")),
                 Tag().name("Product Management")
                     .description("Operations for managing products within branches")
                     .externalDocs(ExternalDocumentation()

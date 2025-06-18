@@ -12,7 +12,8 @@ import org.springframework.web.reactive.config.WebFluxConfigurer
 @ComponentScan(basePackages = [
     "app.carrillo.franchises.infrastructure",
     "app.carrillo.franchises.application",
-    "app.carrillo.franchises.domain"
+    "app.carrillo.franchises.domain",
+    "app.carrillo.franchises.config"
 ])
 class FranchiseApplication {
 
