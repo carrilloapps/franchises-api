@@ -306,21 +306,81 @@ class FranchiseControllerTest {
     fun `should get product with most stock per branch successfully`() {
         // Given
         val franchiseId = "test-id"
-        val product1 = Product(name = "Product 1", stock = 15, price = 100.0)
-        val product2 = Product(name = "Product 2", stock = 8, price = 150.0)
-        val result = listOf(
-            mapOf("Branch 1" to product1),
-            mapOf("Branch 2" to product2)
-        )
+        val productMap1 = mapOf("Branch 1" to Product(name = "Product 1", stock = 15, price = 100.0))
+        val productMap2 = mapOf("Branch 2" to Product(name = "Product 2", stock = 20, price = 150.0))
         
-        whenever(franchiseService.getProductWithMostStockPerBranch(franchiseId)).thenReturn(Flux.fromIterable(result))
+        whenever(franchiseService.getProductWithMostStockPerBranch(franchiseId))
+            .thenReturn(Flux.just(productMap1, productMap2))
 
         // When & Then
         webTestClient.get()
-            .uri("/franchises/{franchiseId}/products/most-stock-per-branch", franchiseId)
+            .uri("/franchises/$franchiseId/products/most-stock-per-branch")
             .exchange()
             .expectStatus().isOk
             .expectBodyList(Map::class.java)
             .hasSize(2)
     }
+
+    @Test
+    @DisplayName("Should handle error when adding franchise fails")
+    fun `should handle error when adding franchise fails`() {
+        // Given
+        val franchise = Franchise(name = "Test Franchise", address = "Test Address")
+        val error = RuntimeException("Database error")
+        
+        whenever(franchiseService.addFranchise(franchise)).thenReturn(Mono.error(error))
+
+        // When & Then
+        webTestClient.post()
+            .uri("/franchises")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(franchise)
+            .exchange()
+            .expectStatus().is5xxServerError
+    }
+
+    @Test
+    @DisplayName("Should handle error when getting all franchises fails")
+    fun `should handle error when getting all franchises fails`() {
+        // Given
+        val error = RuntimeException("Database connection error")
+        whenever(franchiseService.getAllFranchises()).thenReturn(Flux.error(error))
+
+        // When & Then
+        webTestClient.get()
+            .uri("/franchises")
+            .exchange()
+            .expectStatus().is5xxServerError
+    }
+
+    @Test
+    @DisplayName("Should handle error when getting franchise by id fails")
+    fun `should handle error when getting franchise by id fails`() {
+        // Given
+        val franchiseId = "test-id"
+        val error = RuntimeException("Franchise not found")
+        whenever(franchiseService.getFranchiseById(franchiseId)).thenReturn(Mono.error(error))
+
+        // When & Then
+        webTestClient.get()
+            .uri("/franchises/$franchiseId")
+            .exchange()
+            .expectStatus().is5xxServerError
+    }
+
+    @Test
+    @DisplayName("Should handle error when getting products with most stock fails")
+    fun `should handle error when getting products with most stock fails`() {
+        // Given
+        val franchiseId = "test-id"
+        val error = RuntimeException("Failed to get products")
+        whenever(franchiseService.getProductWithMostStockPerBranch(franchiseId)).thenReturn(Flux.error(error))
+
+        // When & Then
+        webTestClient.get()
+            .uri("/franchises/$franchiseId/products/most-stock-per-branch")
+            .exchange()
+            .expectStatus().is5xxServerError
+    }
+
 }

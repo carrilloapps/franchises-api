@@ -323,19 +323,70 @@ class FranchiseServiceTest {
     fun `should get product with most stock per branch successfully`() {
         // Given
         val franchiseId = "test-id"
-        val product1 = Product(name = "Product 1", stock = 5, price = 100.0)
-        val product2 = Product(name = "Product 2", stock = 15, price = 200.0)
-        val product3 = Product(name = "Product 3", stock = 8, price = 150.0)
-        val branch1 = Branch(name = "Branch 1", products = mutableListOf(product1, product2))
-        val branch2 = Branch(name = "Branch 2", products = mutableListOf(product3))
-        val franchise = Franchise(id = franchiseId, name = "Test Franchise", branches = mutableListOf(branch1, branch2))
+        val franchise = Franchise(
+            id = franchiseId,
+            name = "Test Franchise",
+            address = "Test Address",
+            branches = listOf(
+                Branch(
+                    name = "Branch 1",
+                    products = listOf(
+                        Product(name = "Product 1", stock = 15, price = 100.0),
+                        Product(name = "Product 2", stock = 8, price = 150.0)
+                    )
+                ),
+                Branch(
+                    name = "Branch 2",
+                    products = listOf(
+                        Product(name = "Product 3", stock = 20, price = 200.0),
+                        Product(name = "Product 4", stock = 5, price = 250.0)
+                    )
+                )
+            )
+        )
         
         whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(franchise))
 
         // When & Then
         StepVerifier.create(franchiseService.getProductWithMostStockPerBranch(franchiseId))
-            .expectNext(mapOf("Branch 1" to product2))
-            .expectNext(mapOf("Branch 2" to product3))
+            .expectNextMatches { result ->
+                result.containsKey("Branch 1") && result["Branch 1"]?.name == "Product 1" && result["Branch 1"]?.stock == 15
+            }
+            .expectNextMatches { result ->
+                result.containsKey("Branch 2") && result["Branch 2"]?.name == "Product 3" && result["Branch 2"]?.stock == 20
+            }
+            .verifyComplete()
+    }
+
+    @Test
+    @DisplayName("Should handle error when getting product with most stock per branch fails")
+    fun `should handle error when getting product with most stock per branch fails`() {
+        // Given
+        val franchiseId = "test-id"
+        val error = RuntimeException("Database error")
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.error(error))
+
+        // When & Then
+        StepVerifier.create(franchiseService.getProductWithMostStockPerBranch(franchiseId))
+            .expectError(RuntimeException::class.java)
+            .verify()
+    }
+
+    @Test
+    @DisplayName("Should return empty flux when franchise has no branches")
+    fun `should return empty flux when franchise has no branches`() {
+        // Given
+        val franchiseId = "test-id"
+        val franchise = Franchise(
+            id = franchiseId,
+            name = "Test Franchise",
+            address = "Test Address",
+            branches = emptyList()
+        )
+        whenever(franchiseRepository.findById(franchiseId)).thenReturn(Mono.just(franchise))
+
+        // When & Then
+        StepVerifier.create(franchiseService.getProductWithMostStockPerBranch(franchiseId))
             .verifyComplete()
     }
 }
