@@ -118,4 +118,209 @@ class FranchiseControllerTest {
             .expectBody(Franchise::class.java)
             .isEqualTo(updatedFranchise)
     }
+
+    @Test
+    @DisplayName("Should add product to branch successfully")
+    fun `should add product to branch successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "Test Branch"
+        val product = Product(name = "Test Product", stock = 10, price = 100.0)
+        val updatedFranchise = Franchise(id = franchiseId, name = "Test Franchise")
+        
+        whenever(franchiseService.addProductToBranch(franchiseId, branchName, product)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        webTestClient.post()
+            .uri("/franchises/{franchiseId}/branches/{branchName}/products", franchiseId, branchName)
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(product)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(Franchise::class.java)
+            .isEqualTo(updatedFranchise)
+    }
+
+    @Test
+    @DisplayName("Should delete product from branch successfully")
+    fun `should delete product from branch successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "Test Branch"
+        val productName = "Test Product"
+        val updatedFranchise = Franchise(id = franchiseId, name = "Test Franchise")
+        
+        whenever(franchiseService.deleteProductFromBranch(franchiseId, branchName, productName)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        webTestClient.delete()
+            .uri("/franchises/{franchiseId}/branches/{branchName}/products/{productName}", franchiseId, branchName, productName)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(Franchise::class.java)
+            .isEqualTo(updatedFranchise)
+    }
+
+    @Test
+    @DisplayName("Should modify product stock successfully")
+    fun `should modify product stock successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "Test Branch"
+        val productName = "Test Product"
+        val newStock = 25
+        val updatedFranchise = Franchise(id = franchiseId, name = "Test Franchise")
+        
+        whenever(franchiseService.modifyProductStock(franchiseId, branchName, productName, newStock)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        webTestClient.put()
+            .uri("/franchises/{franchiseId}/branches/{branchName}/products/{productName}/stock?newStock={newStock}", franchiseId, branchName, productName, newStock)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(Franchise::class.java)
+            .isEqualTo(updatedFranchise)
+    }
+
+    @Test
+    @DisplayName("Should update franchise name successfully")
+    fun `should update franchise name successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val newName = "Updated Franchise Name"
+        val updatedFranchise = Franchise(id = franchiseId, name = newName)
+        
+        whenever(franchiseService.updateFranchiseName(franchiseId, newName)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        webTestClient.put()
+            .uri("/franchises/{franchiseId}/name?newName={newName}", franchiseId, newName)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(Franchise::class.java)
+            .isEqualTo(updatedFranchise)
+    }
+
+    @Test
+    @DisplayName("Should update franchise address successfully")
+    fun `should update franchise address successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val newAddress = "123 New Street, New City"
+        val updatedFranchise = Franchise(id = franchiseId, name = "Test Franchise", address = newAddress)
+        
+        whenever(franchiseService.updateFranchiseAddress(franchiseId, newAddress)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        webTestClient.put()
+            .uri("/franchises/{franchiseId}/address?newAddress={newAddress}", franchiseId, newAddress)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(Franchise::class.java)
+            .isEqualTo(updatedFranchise)
+    }
+
+    @Test
+    @DisplayName("Should update franchise description successfully")
+    fun `should update franchise description successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val newDescription = "Updated franchise description"
+        val updatedFranchise = Franchise(id = franchiseId, name = "Test Franchise", description = newDescription)
+        
+        whenever(franchiseService.updateFranchiseDescription(franchiseId, newDescription)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        webTestClient.put()
+            .uri("/franchises/{franchiseId}/description?newDescription={newDescription}", franchiseId, newDescription)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(Franchise::class.java)
+            .isEqualTo(updatedFranchise)
+    }
+
+    @Test
+    @DisplayName("Should update branch name successfully")
+    fun `should update branch name successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val oldBranchName = "Old Branch"
+        val newBranchName = "New Branch Name"
+        val updatedFranchise = Franchise(id = franchiseId, name = "Test Franchise")
+        
+        whenever(franchiseService.updateBranchName(franchiseId, oldBranchName, newBranchName)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        webTestClient.put()
+            .uri("/franchises/{franchiseId}/branches/{oldBranchName}/name?newBranchName={newBranchName}", franchiseId, oldBranchName, newBranchName)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(Franchise::class.java)
+            .isEqualTo(updatedFranchise)
+    }
+
+    @Test
+    @DisplayName("Should update product name successfully")
+    fun `should update product name successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "Test Branch"
+        val oldProductName = "Old Product"
+        val newProductName = "New Product Name"
+        val updatedFranchise = Franchise(id = franchiseId, name = "Test Franchise")
+        
+        whenever(franchiseService.updateProductName(franchiseId, branchName, oldProductName, newProductName)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        webTestClient.put()
+            .uri("/franchises/{franchiseId}/branches/{branchName}/products/{oldProductName}/name?newProductName={newProductName}", franchiseId, branchName, oldProductName, newProductName)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(Franchise::class.java)
+            .isEqualTo(updatedFranchise)
+    }
+
+    @Test
+    @DisplayName("Should update product price successfully")
+    fun `should update product price successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val branchName = "Test Branch"
+        val productName = "Test Product"
+        val newPrice = 150.0
+        val updatedFranchise = Franchise(id = franchiseId, name = "Test Franchise")
+        
+        whenever(franchiseService.updateProductPrice(franchiseId, branchName, productName, newPrice)).thenReturn(Mono.just(updatedFranchise))
+
+        // When & Then
+        webTestClient.put()
+            .uri("/franchises/{franchiseId}/branches/{branchName}/products/{productName}/price?newPrice={newPrice}", franchiseId, branchName, productName, newPrice)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(Franchise::class.java)
+            .isEqualTo(updatedFranchise)
+    }
+
+    @Test
+    @DisplayName("Should get product with most stock per branch successfully")
+    fun `should get product with most stock per branch successfully`() {
+        // Given
+        val franchiseId = "test-id"
+        val product1 = Product(name = "Product 1", stock = 15, price = 100.0)
+        val product2 = Product(name = "Product 2", stock = 8, price = 150.0)
+        val result = listOf(
+            mapOf("Branch 1" to product1),
+            mapOf("Branch 2" to product2)
+        )
+        
+        whenever(franchiseService.getProductWithMostStockPerBranch(franchiseId)).thenReturn(Flux.fromIterable(result))
+
+        // When & Then
+        webTestClient.get()
+            .uri("/franchises/{franchiseId}/products/most-stock-per-branch", franchiseId)
+            .exchange()
+            .expectStatus().isOk
+            .expectBodyList(Map::class.java)
+            .hasSize(2)
+    }
 }
